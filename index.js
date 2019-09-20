@@ -3,7 +3,16 @@
 const functions = require('firebase-functions');
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion } = require('dialogflow-fulfillment');
-const { BrowserCarousel } = require('actions-on-google');
+const {
+    dialogflow,
+    SimpleResponse,
+    BasicCard,
+    Suggestions,
+    Permission,
+    UpdatePermission,
+    RegisterUpdate,
+    DialogflowConversation
+} = require('actions-on-google');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
@@ -12,10 +21,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
+    const platform = _agent.originalRequest.source;
+
     function welcome(agent) {
-        let conv = agent.conv();
-        conv.ask(`welcome to my agent`);
-        agent.add(conv);
+        const conv = new DialogflowConversation(request);
+        conv.ask(`hello world`);
     }
 
     function fallback(agent) {
